@@ -1,16 +1,21 @@
-class { 'apache':
-  default_vhost => false,
-}
+class { 'apache':    
+    default_mods => false, 
+  }  
 
-apache::vhost { 'user.example.com':
-  port          => '80',
-  docroot       => '/var/www/user',
-  docroot_owner => 'www-data',
-  docroot_group => 'www-data',
-}
+  include apache::mod::ssl  
 
-apache::vhost { 'ssl.example.com':
-  port    => '443',
-  docroot => '/var/www/ssl',
-  ssl     => true,
+  apache::vhost { 'project.puppetagent*.com-http':    
+    servername      => 'project.puppetagent*.com',    
+    port            => '80',    
+    docroot         => '/var/www/html/',    
+    redirect_status => 'permanent',    
+    redirect_dest   => 'https://project.puppetagent*.com/',  
+  }  
+
+  apache::vhost { 'project.puppetagent*.com-https':    
+    servername      => 'project.puppetagent*.com',    
+    port            => '443',    
+    docroot         => '/var/www/html/',    
+    ssl             => true,    
+  }
 }
